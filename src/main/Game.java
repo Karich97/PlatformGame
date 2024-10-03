@@ -1,18 +1,29 @@
 package main;
 
+import entity.Player;
+
+import java.awt.*;
+
 public class Game implements Runnable{
+    private static final double billion = 1000000000.0;
     private GameWindow gameWindow;
     private GamePanel gamePanel;
     private Thread loopThread;
     private int maxFPS = 120, maxUPS = 120;
-    private final double billion = 1000000000.0;
+    private Player player;
 
     public Game() {
-        gamePanel = new GamePanel();
+        initClasses();
+        gamePanel = new GamePanel(this);
         gamePanel.setFocusable(true);
         gamePanel.requestFocus();
         gameWindow  = new GameWindow(gamePanel);
+
         startGameLoop();
+    }
+
+    private void initClasses() {
+        player = new Player(200, 200);
     }
 
     private void startGameLoop(){
@@ -21,7 +32,11 @@ public class Game implements Runnable{
     }
 
     public void update(){
-        gamePanel.updateGame();
+        player.update();
+    }
+
+    public void render(Graphics g){
+        player.render(g);
     }
 
     @Override
@@ -59,5 +74,13 @@ public class Game implements Runnable{
                 update = 0;
             }
         }
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void windowFocusLost() {
+        player.resetDirBooleans();
     }
 }

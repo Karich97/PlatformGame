@@ -1,16 +1,24 @@
 package main;
 
 import entity.Player;
+import level.LevelManager;
 
 import java.awt.*;
 
 public class Game implements Runnable{
-    private static final double billion = 1000000000.0;
+    private static final double BILLION = 1000000000.0;
+    public static final int DEFAULT_TILE_SIZE = 32;
+    public static final float SCALE = 1.5f;
+    public static final int TILES_IN_WIDTH = 26, TILES_IN_HIGH = 14;
+    public static final int TILES_SIZE = (int) (DEFAULT_TILE_SIZE * SCALE);
+    public static final int GAME_WIDTH = TILES_SIZE * TILES_IN_WIDTH;
+    public static final int GAME_HIGH = TILES_SIZE * TILES_IN_HIGH;
     private GameWindow gameWindow;
     private GamePanel gamePanel;
     private Thread loopThread;
     private int maxFPS = 120, maxUPS = 120;
     private Player player;
+    private LevelManager levelManager;
 
     public Game() {
         initClasses();
@@ -23,7 +31,9 @@ public class Game implements Runnable{
     }
 
     private void initClasses() {
-        player = new Player(200, 200);
+        levelManager = new LevelManager(this);
+        player = new Player(200, 200, (int) (64 * SCALE), (int) (40 * SCALE));
+        player.loadLvlData(levelManager.getLvlOne().getLvlData());
     }
 
     private void startGameLoop(){
@@ -33,15 +43,17 @@ public class Game implements Runnable{
 
     public void update(){
         player.update();
+        levelManager.update();
     }
 
     public void render(Graphics g){
+        levelManager.draw(g);
         player.render(g);
     }
 
     @Override
     public void run() {
-        double timePerFrame = billion / maxFPS, timePerUpdate = billion / maxUPS;
+        double timePerFrame = BILLION / maxFPS, timePerUpdate = BILLION / maxUPS;
         long previousTime = System.nanoTime();
         long now, lastCheck = System.currentTimeMillis();
         int frame = 0, update = 0;

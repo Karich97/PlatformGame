@@ -1,29 +1,35 @@
 package entity;
 
-import javax.imageio.ImageIO;
+import main.Game;
+import utilz.LoadSave;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
 
+import static main.Game.SCALE;
 import static utilz.Constants.PlayerConstants.*;
+import static utilz.HelpMethods.CanMoveHere;
 
 public class Player extends Entity{
     private static final int aniSpeed = 15;
+    private static final float speed = 2 * SCALE;
+    private static float xSpeed = 0, ySpeed = 0;
     private BufferedImage[][] animations;
     private int aniTick = 0, aniIndex = 0;
     private boolean left, right, up, down;
-    private float speed = 2;
     private int playerAction = IDL;
     private boolean moving = false, attacking = false;
+    private int[][] lvlData;
+    private float xDrawOffset = 21 * SCALE, yDrawOffset = 4 * SCALE;
 
     public void setAttacking(boolean attacking) {
         this.attacking = attacking;
     }
 
-    public Player(float x, float y) {
-        super(x, y);
+    public Player(float x, float y, int width, int height) {
+        super(x, y, width, height);
         loadAnimations();
+        initHitBox(x, y, 20 * SCALE, 28 * SCALE);
     }
 
     public void update() {
@@ -33,8 +39,8 @@ public class Player extends Entity{
     }
 
     public void render(Graphics g) {
-        g.drawImage(animations[playerAction][aniIndex], (int)x, (int)y, 256, 160, null);
-
+        g.drawImage(animations[playerAction][aniIndex], (int)(hitBox.x - xDrawOffset), (int) (hitBox.y - yDrawOffset), width, height, null);
+        drawHitBox(g);
     }
 
     private void updateAnimationTick() {
@@ -71,35 +77,39 @@ public class Player extends Entity{
 
     private void updatePosition() {
         moving = false;
-
+        if (!left && !right && !up && !down){
+            return;
+        }
+        xSpeed = 0;
+        ySpeed = 0;
         if (left && !right){
-            x -= speed;
-            moving = true;
+            xSpeed = -speed;
         } if (right && !left){
-            x += speed;
-            moving = true;
+            xSpeed = speed;
         } if (down && !up){
-            y += speed;
-            moving = true;
+            ySpeed = speed;
         } if (up && !down){
-            y -= speed;
+            ySpeed = -speed;
+        }
+        if (CanMoveHere(hitBox.x + xSpeed, hitBox.y + ySpeed, hitBox.width, hitBox.height, lvlData)){
+            hitBox.x += xSpeed;
+            hitBox.y += ySpeed;
             moving = true;
         }
     }
 
     private void loadAnimations() {
-        InputStream is = getClass().getResourceAsStream("/player_sprites.png");
-        try(InputStream ignored = is){
-            BufferedImage img = ImageIO.read(is);
-            animations = new BufferedImage[9][6];
-            for (int j = 0; j < animations.length; j++) {
-                for (int i = 0; i < animations[j].length; i++) {
-                    animations[j][i] = img.getSubimage(i * 64, j * 40, 64, 40);
-                }
+        BufferedImage img = LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS);
+        animations = new BufferedImage[9][6];
+        for (int j = 0; j < animations.length; j++) {
+            for (int i = 0; i < animations[j].length; i++) {
+                animations[j][i] = img.getSubimage(i * 64, j * 40, 64, 40);
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
+    }
+
+    public void loadLvlData(int[][] lvlData){
+        this.lvlData = lvlData;
     }
 
     public void setLeft(boolean left) {

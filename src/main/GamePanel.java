@@ -7,8 +7,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GamePanel extends JPanel {
-    private int tileWidth = 40, tileHeight = 25, tileSize = 32;
-    private int windowWidth = tileWidth * tileSize ,windowHeight = tileHeight * tileSize;
     private Game game;
 
     public GamePanel(Game game) {
@@ -21,7 +19,7 @@ public class GamePanel extends JPanel {
     }
 
     public void setPanelSize() {
-        Dimension dimension = new Dimension(windowWidth, windowHeight);
+        Dimension dimension = new Dimension(Game.GAME_WIDTH, Game.GAME_HIGH);
         setMinimumSize(dimension);
         setPreferredSize(dimension);
         setMaximumSize(dimension);

@@ -25,7 +25,6 @@ public class Constants {
                 case BACKWARD, FORWARD -> 6;
                 case HIT -> 4;
                 case JUMPING, ATTACK_1, ATTACK_JUMP_1, ATTACK_JUMP_2 -> 3;
-                case FALLING -> 2;
                 default -> 1;
             };
         }

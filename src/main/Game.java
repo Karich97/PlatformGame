@@ -8,7 +8,7 @@ import java.awt.*;
 public class Game implements Runnable{
     private static final double BILLION = 1000000000.0;
     public static final int DEFAULT_TILE_SIZE = 32;
-    public static final float SCALE = 1.5f;
+    public static final float SCALE = 2f;
     public static final int TILES_IN_WIDTH = 26, TILES_IN_HIGH = 14;
     public static final int TILES_SIZE = (int) (DEFAULT_TILE_SIZE * SCALE);
     public static final int GAME_WIDTH = TILES_SIZE * TILES_IN_WIDTH;

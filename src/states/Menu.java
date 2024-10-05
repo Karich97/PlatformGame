@@ -1,26 +1,55 @@
 package states;
 
+import static main.Game.*;
+import static states.GameState.*;
 import input.StateMethods;
 import main.Game;
+import ui.MenuButton;
+import utilz.LoadSave;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 
 public class Menu extends State implements StateMethods {
+    private BufferedImage backgroundImg;
+    private int menuX, menuY, menuWidth, menuHeight;
+
+    private final MenuButton[] buttons = new MenuButton[3];
     public Menu(Game game) {
         super(game);
+        loadBackground();
+        loadButtons();
+    }
+
+    private void loadBackground() {
+        backgroundImg = LoadSave.GetSpriteAtlas(LoadSave.MENU_BACKGROUND);
+        menuWidth = (int) (backgroundImg.getWidth() * SCALE);
+        menuHeight = (int) (backgroundImg.getHeight() * SCALE);
+        menuX = GAME_WIDTH / 2 - menuWidth / 2;
+        menuY = (int) (45 * SCALE);
+    }
+
+    private void loadButtons() {
+        buttons[0] = new MenuButton(GAME_WIDTH / 2, (int) (150 * SCALE), 0, PLAYING);
+        buttons[1] = new MenuButton(GAME_WIDTH / 2, (int) (220 * SCALE), 1, OPTIONS);
+        buttons[2] = new MenuButton(GAME_WIDTH / 2, (int) (290 * SCALE), 2, QUIT);
     }
 
     @Override
     public void update() {
-
+        for (MenuButton mb : buttons) {
+            mb.update();
+        }
     }
 
     @Override
     public void draw(Graphics g) {
-        g.setColor(Color.BLACK);
-        g.drawString("MENU", Game.GAME_WIDTH / 2, 200);
+        g.drawImage(backgroundImg, menuX, menuY, menuWidth, menuHeight, null);
+        for (MenuButton mb : buttons) {
+            mb.draw(g);
+        }
     }
 
     @Override
@@ -30,16 +59,46 @@ public class Menu extends State implements StateMethods {
 
     @Override
     public void mousePressed(MouseEvent e) {
-
+        for (MenuButton mb : buttons) {
+            if (isIn(e, mb)) {
+                mb.setMousePressed(true);
+                break;
+            }
+        }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        for (MenuButton mb : buttons) {
+            if (isIn(e, mb)) {
+                if (mb.isMousePressed()){
+                    mb.applyGameState();
+                }
+                break;
+            }
+        }
+        resetButtons();
+    }
 
+    private void resetButtons() {
+        for (MenuButton mb : buttons){
+            mb.resetBooleans();
+        }
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
+        for (MenuButton mb : buttons){
+            if (isIn(e, mb)){
+                mb.setMouseOver(true);
+                break;
+            }
+            mb.setMouseOver(false);
+        }
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
 
     }
 

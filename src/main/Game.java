@@ -1,7 +1,8 @@
 package main;
 
-import entity.Player;
-import level.LevelManager;
+import states.GameState;
+import states.Menu;
+import states.Playing;
 
 import java.awt.*;
 
@@ -17,8 +18,9 @@ public class Game implements Runnable{
     private GamePanel gamePanel;
     private Thread loopThread;
     private int maxFPS = 120, maxUPS = 120;
-    private Player player;
-    private LevelManager levelManager;
+    private Playing playing;
+    private Menu menu;
+
 
     public Game() {
         initClasses();
@@ -31,9 +33,8 @@ public class Game implements Runnable{
     }
 
     private void initClasses() {
-        levelManager = new LevelManager(this);
-        player = new Player(200, 200, (int) (64 * SCALE), (int) (40 * SCALE));
-        player.loadLvlData(levelManager.getLvlOne().getLvlData());
+        menu = new Menu(this);
+        playing = new Playing(this);
     }
 
     private void startGameLoop(){
@@ -42,13 +43,25 @@ public class Game implements Runnable{
     }
 
     public void update(){
-        player.update();
-        levelManager.update();
+        switch (GameState.state){
+            case PLAYING -> {
+                playing.update();
+            }
+            case MENU -> {
+                menu.update();
+            }
+        }
     }
 
     public void render(Graphics g){
-        levelManager.draw(g);
-        player.render(g);
+        switch (GameState.state){
+            case PLAYING -> {
+                playing.draw(g);
+            }
+            case MENU -> {
+                menu.draw(g);
+            }
+        }
     }
 
     @Override
@@ -88,11 +101,17 @@ public class Game implements Runnable{
         }
     }
 
-    public Player getPlayer() {
-        return player;
+    public void windowFocusLost() {
+        if (GameState.state == GameState.PLAYING){
+            playing.getPlayer().resetDirBooleans();
+        }
     }
 
-    public void windowFocusLost() {
-        player.resetDirBooleans();
+    public Menu getMenu() {
+        return menu;
+    }
+
+    public Playing getPlaying() {
+        return playing;
     }
 }

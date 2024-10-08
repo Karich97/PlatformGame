@@ -1,6 +1,5 @@
 package entity;
 
-import main.Game;
 import utilz.LoadSave;
 
 import java.awt.*;
@@ -11,12 +10,12 @@ import static utilz.Constants.PlayerConstants.*;
 import static utilz.HelpMethods.*;
 
 public class Player extends Entity{
-    private static final int aniSpeed = 15;
+    private static final int aniSpeed = (int) (25 / SCALE);
     private static final float speed = 0.5f * SCALE;
     private static float xSpeed = 0, ySpeed = 0, airSpeed = 0f, gravity = 0.04f * SCALE, jumpSpeed = -2.25f * SCALE, fallSpeedAfterCollision = 0.5f * SCALE;
     private BufferedImage[][] animations;
     private int aniTick = 0, aniIndex = 0;
-    private boolean left, right, up, down, jump, inAir = false;
+    private boolean left, right, up, down, jump, inAir = true;
     private int playerAction = IDL;
     private boolean moving = false, attacking = false;
     private int[][] lvlData;
@@ -57,24 +56,31 @@ public class Player extends Entity{
 
     private void setAnimation() {
         int startAni = playerAction;
-        if (moving){
-            playerAction = FORWARD;
-        } else {
-            playerAction = IDL;
-        }
-        if (inAir) {
-            if (airSpeed < 0){
-                playerAction = JUMPING;
-            } else {
-                playerAction = FALLING;
-            }
-        }
-        if (attacking) {
-            playerAction = ATTACK_1;
-        }
+        playerAction = getCurrentAction();
         if (startAni != playerAction){
             resetTick();
         }
+    }
+
+    private int getCurrentAction() {
+        int response;
+        if (inAir) {
+            if (airSpeed < 0){
+                response = JUMPING;
+            } else {
+                response = FALLING;
+            }
+        } else {
+            if (moving){
+                response = FORWARD;
+            } else {
+                response = IDL;
+            }
+        }
+        if (attacking) {
+            response = ATTACK_1;
+        }
+        return response;
     }
 
     private void resetTick() {

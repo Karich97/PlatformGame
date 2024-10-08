@@ -6,27 +6,11 @@ import static main.Game.*;
 
 public class HelpMethods {
     public static boolean CanMoveHere(float x, float y, float width, float height, int[][] lvlData) {
-        if (!IsSolid(x, y, lvlData)){
-            if (!IsSolid(x + width, y + height, lvlData)){
-                if (!IsSolid(x + width, y, lvlData)){
-                    if (!IsSolid(x, y + height, lvlData)){
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    private static boolean IsSolid(float x, float y, int[][] lvlData) {
-        if (x < 0 || x >= lvlData[0].length * TILES_SIZE || y < 0 || y >= GAME_HIGH){
-            return true;
-        }
-        float xIndex = x / TILES_SIZE;
-        float yIndex = y / TILES_SIZE;
-
-        int value = lvlData[(int) yIndex][(int) xIndex];
-        return value != 11;
+        // Проверяем все четыре угла на наличие твердой поверхности
+        return !isSolid(x, y, lvlData) &&
+                !isSolid(x + width, y, lvlData) &&
+                !isSolid(x, y + height, lvlData) &&
+                !isSolid(x + width, y + height, lvlData);
     }
 
     public static float GetEntityXPosNextToWall(Rectangle2D.Float hitBox, float xSpeed){
@@ -51,12 +35,28 @@ public class HelpMethods {
         }
     }
 
-    public static boolean IsEntityOnFloor(Rectangle2D.Float hitBox, int[][] lvlData){
-        if (!IsSolid(hitBox.x,  hitBox.y + hitBox.height + 1, lvlData)) {
-            if (!IsSolid(hitBox.x + hitBox.width, hitBox.y + hitBox.height + 1, lvlData)) {
-                return false;
-            }
+    public static boolean IsEntityOnFloor(Rectangle2D.Float hitBox, int[][] lvlData) {
+        // Проверяем, находится ли объект на уровне
+        return isSolidBelow(hitBox, lvlData);
+    }
+
+    private static boolean isSolidBelow(Rectangle2D.Float hitBox, int[][] lvlData) {
+        // Проверяем два угла hitBox на наличие твердой поверхности
+        return isSolid(hitBox.x, hitBox.y + hitBox.height + 1, lvlData) ||
+                isSolid(hitBox.x + hitBox.width, hitBox.y + hitBox.height + 1, lvlData);
+    }
+
+    private static boolean isSolid(float x, float y, int[][] lvlData) {
+        // Проверяем, выходит ли координата за пределы уровня
+        if (x < 0 || x >= lvlData[0].length * TILES_SIZE || y < 0 || y >= GAME_HIGH) {
+            return true; // За пределами уровня считается твердой поверхностью
         }
-        return true;
+
+        // Получаем индексы плитки
+        int xIndex = (int) (x / TILES_SIZE);
+        int yIndex = (int) (y / TILES_SIZE);
+
+        // Проверяем значение уровня
+        return lvlData[yIndex][xIndex] != 11;
     }
 }

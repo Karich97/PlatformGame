@@ -15,8 +15,8 @@ public abstract class Entity {
         this.height = height;
     }
 
+    // For debugging
     protected void drawHitBox(Graphics g){
-        // For debugging
         g.setColor(Color.pink);
         g.drawRect((int) hitBox.x,(int) hitBox.y,(int) hitBox.width,(int) hitBox.height);
     }

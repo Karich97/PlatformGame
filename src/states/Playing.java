@@ -41,7 +41,7 @@ public class Playing extends State implements StateMethods {
 
     private void initClasses() {
         levelManager = new LevelManager(game);
-        player = new Player((int) (GAME_WIDTH * 0.2), 200, (int) (64 * SCALE), (int) (40 * SCALE));
+        player = new Player((int) (GAME_WIDTH * 0.2), (int) (GAME_HIGH * 0.3), (int) (64 * SCALE), (int) (40 * SCALE));
         player.loadLvlData(levelManager.getLvlOne().getLvlData());
         pauseOverlay = new PauseOverlay(this);
     }
@@ -150,7 +150,7 @@ public class Playing extends State implements StateMethods {
             case KeyEvent.VK_SPACE:
                 player.setJump(true);
                 break;
-            case KeyEvent.VK_ESCAPE:
+            case KeyEvent.VK_ESCAPE, KeyEvent.VK_BACK_SPACE:
                 resetPaused();
                 break;
         }

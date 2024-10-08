@@ -9,7 +9,7 @@ import java.awt.*;
 public class Game implements Runnable{
     private static final double BILLION = 1000000000.0;
     public static final int DEFAULT_TILE_SIZE = 32;
-    public static final float SCALE = 2f;
+    public static final float SCALE = 1.3f;
     public static final int TILES_IN_WIDTH = 26, TILES_IN_HIGH = 14;
     public static final int TILES_SIZE = (int) (DEFAULT_TILE_SIZE * SCALE);
     public static final int GAME_WIDTH = TILES_SIZE * TILES_IN_WIDTH;
@@ -88,13 +88,13 @@ public class Game implements Runnable{
                 frame++;
             }
 
-            now = System.currentTimeMillis();
-            if (now - lastCheck >= 1000){
-                lastCheck = now;
-                System.out.println("FPS: " + frame + " | UPS: " + update);
-                frame = 0;
-                update = 0;
-            }
+//            now = System.currentTimeMillis();
+//            if (now - lastCheck >= 1000){
+//                lastCheck = now;
+//                System.out.println("FPS: " + frame + " | UPS: " + update);
+//                frame = 0;
+//                update = 0;
+//            }
         }
     }
 

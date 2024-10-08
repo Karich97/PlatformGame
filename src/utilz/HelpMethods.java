@@ -19,7 +19,7 @@ public class HelpMethods {
     }
 
     private static boolean IsSolid(float x, float y, int[][] lvlData) {
-        if (x < 0 || x >= GAME_WIDTH || y < 0 || y >= GAME_HIGH){
+        if (x < 0 || x >= lvlData[0].length * TILES_SIZE || y < 0 || y >= GAME_HIGH){
             return true;
         }
         float xIndex = x / TILES_SIZE;

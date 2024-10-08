@@ -32,12 +32,12 @@ public class LevelManager {
             
     }
 
-    public void draw(Graphics g){
+    public void draw(Graphics g, int x){
         int index;
         for (int j = 0; j <TILES_IN_HIGH; j++) {
-            for (int i = 0; i < TILES_IN_WIDTH; i++) {
+            for (int i = 0; i < 50; i++) {
                 index = lvlOne.getSpriteIndex(i, j);
-                g.drawImage(levelSprite[index], i * TILES_SIZE, j * TILES_SIZE, TILES_SIZE, TILES_SIZE, null);
+                g.drawImage(levelSprite[index], i * TILES_SIZE - x, j * TILES_SIZE, TILES_SIZE, TILES_SIZE, null);
             }
         }
     }

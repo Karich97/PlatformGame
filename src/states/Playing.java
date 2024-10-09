@@ -1,5 +1,6 @@
 package states;
 
+import entity.EnemyManager;
 import entity.Player;
 import input.StateMethods;
 import level.LevelManager;
@@ -20,6 +21,7 @@ public class Playing extends State implements StateMethods {
     private final int rightBorder = (int)(TILES_IN_WIDTH * TILES_SIZE * 0.5);
     private Player player;
     private LevelManager levelManager;
+    private EnemyManager enemyManager;
     private PauseOverlay pauseOverlay;
     private boolean paused = false;
     private int difX, maxX, playerX;
@@ -41,6 +43,7 @@ public class Playing extends State implements StateMethods {
 
     private void initClasses() {
         levelManager = new LevelManager(game);
+        enemyManager = new EnemyManager(this);
         player = new Player((int) (GAME_WIDTH * 0.2), (int) (GAME_HIGH * 0.3), (int) (64 * SCALE), (int) (40 * SCALE));
         player.loadLvlData(levelManager.getLvlOne().getLvlData());
         pauseOverlay = new PauseOverlay(this);
@@ -60,14 +63,19 @@ public class Playing extends State implements StateMethods {
         } else {
             levelManager.update();
             player.update();
-            maxX = (levelManager.getLvlOne().getLvlData()[0].length - TILES_IN_WIDTH) * TILES_SIZE;
-            playerX = (int) player.getHitBox().x;
-            difX = playerX - rightBorder;
-            if (difX < 0) {
-                difX = 0;
-            } else if (difX > maxX) {
-                difX = maxX;
-            }
+            checkCloseBorder();
+            enemyManager.update();
+        }
+    }
+
+    private void checkCloseBorder() {
+        maxX = (levelManager.getLvlOne().getLvlData()[0].length - TILES_IN_WIDTH) * TILES_SIZE;
+        playerX = (int) player.getHitBox().x;
+        difX = playerX - rightBorder;
+        if (difX < 0) {
+            difX = 0;
+        } else if (difX > maxX) {
+            difX = maxX;
         }
     }
 
@@ -78,6 +86,7 @@ public class Playing extends State implements StateMethods {
         drawSmallClouds(g);
         levelManager.draw(g, difX);
         player.render(g, difX);
+        enemyManager.draw(g, difX);
         if (paused) {
             g.setColor(new Color(0,0,0,150));
             g.fillRect(0,0,GAME_WIDTH, GAME_HIGH);

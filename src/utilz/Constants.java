@@ -1,6 +1,7 @@
 package utilz;
 
 import static main.Game.SCALE;
+import static main.Game.TILES_SIZE;
 
 public class Constants {
     public static class EnemyConstants {

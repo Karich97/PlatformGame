@@ -38,8 +38,8 @@ public class Player extends Entity{
     }
 
     public void render(Graphics g, int x) {
-        g.drawImage(animations[playerAction][aniIndex], (int)(hitBox.x - xDrawOffset) - x, (int) (hitBox.y - yDrawOffset), width, height, null);
-       //drawHitBox(g);
+        g.drawImage(animations[playerAction][aniIndex], (int)(hitbox.x - xDrawOffset) - x, (int) (hitbox.y - yDrawOffset), width, height, null);
+       //drawHitBox(g, x);
     }
 
     private void updateAnimationTick() {
@@ -106,12 +106,12 @@ public class Player extends Entity{
             xSpeed += speed;
         }
         if (inAir){
-            if (CanMoveHere(hitBox.x, hitBox.y + airSpeed, hitBox.width, hitBox.height, lvlData)){
-                hitBox.y += airSpeed;
+            if (CanMoveHere(hitbox.x, hitbox.y + airSpeed, hitbox.width, hitbox.height, lvlData)){
+                hitbox.y += airSpeed;
                 airSpeed += gravity;
                 updateXPos(xSpeed);
             } else {
-                hitBox.y = GetEntityYPosUnderRoofOrAboveFloor(hitBox, airSpeed);
+                hitbox.y = GetEntityYPosUnderRoofOrAboveFloor(hitbox, airSpeed);
                 if (airSpeed > 0){
                     resetInAir();
                 } else {
@@ -121,15 +121,15 @@ public class Player extends Entity{
             }
         } else {
             updateXPos(xSpeed);
-            if (!IsEntityOnFloor(hitBox, lvlData)) {
+            if (!IsEntityOnFloor(hitbox, lvlData)) {
                 inAir = true;
             }
         }
 
-        if (CanMoveHere(hitBox.x + xSpeed, hitBox.y + ySpeed, hitBox.width, hitBox.height, lvlData)){
-            hitBox.x += xSpeed;
+        if (CanMoveHere(hitbox.x + xSpeed, hitbox.y + ySpeed, hitbox.width, hitbox.height, lvlData)){
+            hitbox.x += xSpeed;
         } else {
-            hitBox.x = GetEntityXPosNextToWall(hitBox, xSpeed);
+            hitbox.x = GetEntityXPosNextToWall(hitbox, xSpeed);
         }
         moving = true;
     }
@@ -147,9 +147,9 @@ public class Player extends Entity{
     }
 
     private void updateXPos(float xSpeed) {
-        if (CanMoveHere(hitBox.x + xSpeed, hitBox.y + ySpeed, hitBox.width, hitBox.height, lvlData)){
-            hitBox.x += xSpeed;
-            hitBox.y += ySpeed;
+        if (CanMoveHere(hitbox.x + xSpeed, hitbox.y + ySpeed, hitbox.width, hitbox.height, lvlData)){
+            hitbox.x += xSpeed;
+            hitbox.y += ySpeed;
             moving = true;
         }
     }
@@ -166,7 +166,7 @@ public class Player extends Entity{
 
     public void loadLvlData(int[][] lvlData){
         this.lvlData = lvlData;
-        if (!IsEntityOnFloor(hitBox, lvlData)){
+        if (!IsEntityOnFloor(hitbox, lvlData)){
             inAir = true;
         }
     }

@@ -44,7 +44,7 @@ public class Playing extends State implements StateMethods {
     private void initClasses() {
         levelManager = new LevelManager(game);
         enemyManager = new EnemyManager(this);
-        player = new Player((int) (GAME_WIDTH * 0.2), (int) (GAME_HIGH * 0.3), (int) (64 * SCALE), (int) (40 * SCALE));
+        player = new Player((int) (GAME_WIDTH * 0.2), (int) (GAME_HEIGHT * 0.3), (int) (64 * SCALE), (int) (40 * SCALE));
         player.loadLvlData(levelManager.getLvlOne().getLvlData());
         pauseOverlay = new PauseOverlay(this);
     }
@@ -64,13 +64,13 @@ public class Playing extends State implements StateMethods {
             levelManager.update();
             player.update();
             checkCloseBorder();
-            enemyManager.update();
+            enemyManager.update(levelManager.getLvlOne().getLvlData());
         }
     }
 
     private void checkCloseBorder() {
         maxX = (levelManager.getLvlOne().getLvlData()[0].length - TILES_IN_WIDTH) * TILES_SIZE;
-        playerX = (int) player.getHitBox().x;
+        playerX = (int) player.getHitbox().x;
         difX = playerX - rightBorder;
         if (difX < 0) {
             difX = 0;
@@ -81,7 +81,7 @@ public class Playing extends State implements StateMethods {
 
     @Override
     public void draw(Graphics g) {
-        g.drawImage(bufferedImg, 0,0,GAME_WIDTH, GAME_HIGH, null);
+        g.drawImage(bufferedImg, 0,0,GAME_WIDTH, GAME_HEIGHT, null);
         drawClouds(g);
         drawSmallClouds(g);
         levelManager.draw(g, difX);
@@ -89,7 +89,7 @@ public class Playing extends State implements StateMethods {
         enemyManager.draw(g, difX);
         if (paused) {
             g.setColor(new Color(0,0,0,150));
-            g.fillRect(0,0,GAME_WIDTH, GAME_HIGH);
+            g.fillRect(0,0,GAME_WIDTH, GAME_HEIGHT);
             pauseOverlay.draw(g);
         }
     }

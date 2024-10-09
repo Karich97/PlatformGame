@@ -18,6 +18,9 @@ public class Constants {
         public static final int CRABBY_WIDTH = (int) (CRABBY_WIDTH_DEFAULT * SCALE);
         public static final int CRABBY_HEIGHT = (int) (CRABBY_HEIGHT_DEFAULT * SCALE);
 
+        public static final int CRABBY_DRAW_OFFSET_X = (int) (26 * SCALE);
+        public static final int CRABBY_DRAW_OFFSET_Y = (int) (9 * SCALE);
+
         public static int GetSpriteAmount(int enemyType, int enemyState) {
             switch (enemyType){
                 case CRABBY -> {

@@ -45,13 +45,30 @@ public class HelpMethods {
                 return false;
             }
         return true;
-
     }
 
-    private static boolean isSolidBelow(Rectangle2D.Float hitBox, int[][] lvlData) {
-        // Проверяем два угла hitBox на наличие твердой поверхности
-        return IsSolid(hitBox.x, hitBox.y + hitBox.height + ((float) TILES_SIZE / 2), lvlData) ||
-                IsSolid(hitBox.x + hitBox.width, hitBox.y + hitBox.height + 1, lvlData);
+    private static boolean IsAllTilesWalkable(int xStart, int xEnd, int y, int[][] lvlData) {
+        for (int i = 0; i < Math.abs(xStart - xEnd); i++) {
+            if (IsTileSolid(xEnd + i, y, lvlData)) {
+                return false;
+            }
+            if (!IsTileSolid(xEnd + i, y + 1, lvlData)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean IsSightClear(int[][] lvlData, Rectangle2D.Float firstHitbox,
+                                       Rectangle2D.Float secondHitbox, int tileY) {
+        int firstXTile = (int) (firstHitbox.x / TILES_SIZE);
+        int secondXTile = (int) (secondHitbox.x / TILES_SIZE);
+        return IsAllTilesWalkable(firstXTile, secondXTile,tileY, lvlData);
+    }
+
+    private static boolean IsTileSolid(int xTile, int yTile, int[][] lvlData) {
+        int value = lvlData[yTile][xTile];
+        return value != 11;
     }
 
     private static boolean IsSolid(float x, float y, int[][] lvlData) {
@@ -61,10 +78,7 @@ public class HelpMethods {
         } else {
             int xIndex = (int) (x / TILES_SIZE);
             int yIndex = (int) (y / TILES_SIZE);
-
-            int value = lvlData[yIndex][xIndex];
-
-            return value != 11;
+            return IsTileSolid(xIndex, yIndex, lvlData);
         }
     }
 

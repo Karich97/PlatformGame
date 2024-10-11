@@ -1,7 +1,6 @@
 package utilz;
 
 import static main.Game.SCALE;
-import static main.Game.TILES_SIZE;
 
 public class Constants {
     public static class EnemyConstants {
@@ -92,23 +91,21 @@ public class Constants {
     }
 
     public static class PlayerConstants{
-        public static final int BACKWARD = -1;
         public static final int IDL = 0;
-        public static final int FORWARD = 1;
+        public static final int RUNNING = 1;
         public static final int JUMPING = 2;
         public static final int FALLING = 3;
-        public static final int HIT = 4;
-        public static final int GROUND = 5;
-        public static final int ATTACK_1 = 6;
-        public static final int ATTACK_JUMP_1 = 7;
-        public static final int ATTACK_JUMP_2 = 8;
+        public static final int ATTACK = 4;
+        public static final int HIT = 5;
+        public static final int DEAD = 6;
 
         public static int GetSpriteAmount(int typeOfAction){
             return switch (typeOfAction) {
+                case DEAD -> 8;
+                case RUNNING -> 6;
                 case IDL -> 5;
-                case BACKWARD, FORWARD -> 6;
                 case HIT -> 4;
-                case JUMPING, ATTACK_1, ATTACK_JUMP_1, ATTACK_JUMP_2 -> 3;
+                case JUMPING, ATTACK -> 3;
                 default -> 1;
             };
         }

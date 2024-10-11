@@ -18,16 +18,15 @@ import static main.Game.*;
 import static utilz.Constants.Environment.*;
 
 public class Playing extends State implements StateMethods {
-    private final int rightBorder = (int)(TILES_IN_WIDTH * TILES_SIZE * 0.5);
+    private static final int rightBorder = (int)(TILES_IN_WIDTH * TILES_SIZE * 0.5);
+    private final BufferedImage bufferedImg, bigCloud, smallCloud;
+    private final int[] smallCloudPos;
     private Player player;
     private LevelManager levelManager;
     private EnemyManager enemyManager;
     private PauseOverlay pauseOverlay;
     private boolean paused = false;
-    private int difX, maxX, playerX;
-    private BufferedImage bufferedImg, bigCloud, smallCloud;
-    private int[] smallCloudPos;
-    private Random rnd =new Random();
+    private int difX;
 
     public Playing(Game game) {
         super(game);
@@ -37,6 +36,7 @@ public class Playing extends State implements StateMethods {
         smallCloud = LoadSave.GetSpriteAtlas(LoadSave.SMALL_CLOUDS);
         smallCloudPos = new int[10];
         for (int i = 0; i < smallCloudPos.length; i++) {
+            Random rnd = new Random();
             smallCloudPos[i] = (int) (90 * SCALE) + rnd.nextInt((int) (100 * SCALE));
         }
     }
@@ -47,9 +47,6 @@ public class Playing extends State implements StateMethods {
         player = new Player((int) (GAME_WIDTH * 0.2), (int) (GAME_HEIGHT * 0.3), (int) (64 * SCALE), (int) (40 * SCALE));
         player.loadLvlData(levelManager.getLvlOne().getLvlData());
         pauseOverlay = new PauseOverlay(this);
-    }
-
-    public void windowFocusLost() {
     }
 
     public Player getPlayer() {
@@ -69,8 +66,8 @@ public class Playing extends State implements StateMethods {
     }
 
     private void checkCloseBorder() {
-        maxX = (levelManager.getLvlOne().getLvlData()[0].length - TILES_IN_WIDTH) * TILES_SIZE;
-        playerX = (int) player.getHitbox().x;
+        int maxX = (levelManager.getLvlOne().getLvlData()[0].length - TILES_IN_WIDTH) * TILES_SIZE;
+        int playerX = (int) player.getHitbox().x;
         difX = playerX - rightBorder;
         if (difX < 0) {
             difX = 0;
@@ -147,14 +144,8 @@ public class Playing extends State implements StateMethods {
             case KeyEvent.VK_D:
                 player.setRight(true);
                 break;
-            case KeyEvent.VK_S:
-                player.setDown(true);
-                break;
             case KeyEvent.VK_A:
                 player.setLeft(true);
-                break;
-            case KeyEvent.VK_W:
-                player.setUp(true);
                 break;
             case KeyEvent.VK_SPACE:
                 player.setJump(true);
@@ -171,14 +162,8 @@ public class Playing extends State implements StateMethods {
             case KeyEvent.VK_D:
                 player.setRight(false);
                 break;
-            case KeyEvent.VK_S:
-                player.setDown(false);
-                break;
             case KeyEvent.VK_A:
                 player.setLeft(false);
-                break;
-            case KeyEvent.VK_W:
-                player.setUp(false);
                 break;
             case KeyEvent.VK_SPACE:
                 player.setJump(false);

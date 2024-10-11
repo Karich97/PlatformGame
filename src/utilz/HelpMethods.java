@@ -67,6 +67,12 @@ public class HelpMethods {
     }
 
     private static boolean IsTileSolid(int xTile, int yTile, int[][] lvlData) {
+        if (xTile >= lvlData[0].length) {
+            xTile = lvlData[0].length - 1;
+        }
+        if (yTile >= lvlData.length) {
+            yTile = lvlData.length;
+        }
         int value = lvlData[yTile][xTile];
         return value != 11;
     }

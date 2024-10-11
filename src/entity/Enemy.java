@@ -104,8 +104,12 @@ public abstract class Enemy extends Entity {
     protected void changeWalkDir() {
         if (walkDir == LEFT) {
             walkDir = RIGHT;
+            flipX = width;
+            flipW = -1;
         } else {
             walkDir = LEFT;
+            flipX = 0;
+            flipW = 1;
         }
     }
 

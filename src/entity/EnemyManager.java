@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import static utilz.Constants.Directions.LEFT;
 import static utilz.Constants.EnemyConstants.*;
 import static utilz.LoadSave.getCrabs;
 
@@ -49,7 +50,11 @@ public class EnemyManager {
 
     private void drawCrabs(Graphics g, int difX) {
         for (Crabby c : crabbies) {
-            g.drawImage(crabbyArr[c.getEnemyState()][c.getAniIndex()], (int)(c.hitbox.x) - difX - CRABBY_DRAW_OFFSET_X, (int)(c.hitbox.y) - CRABBY_DRAW_OFFSET_Y, CRABBY_WIDTH, CRABBY_HEIGHT, null);
+            g.drawImage(crabbyArr[c.getEnemyState()][c.getAniIndex()],
+                    (int)(c.hitbox.x) - difX - CRABBY_DRAW_OFFSET_X + c.flipX,
+                    (int)(c.hitbox.y) - CRABBY_DRAW_OFFSET_Y,
+                    CRABBY_WIDTH * c.flipW, CRABBY_HEIGHT, null);
+            // g.drawRect((int) c.hitbox.x - difX, (int) c.hitbox.y, (int) c.hitbox.width, (int) c.hitbox.height); //Crabby hitBox
         }
     }
 }

@@ -1,5 +1,6 @@
 package entity;
 
+import states.Playing;
 import utilz.LoadSave;
 
 import java.awt.*;
@@ -27,12 +28,15 @@ public class Player extends Entity{
     private static final int statusBarWidth = (int) (192 * SCALE), statusBarHeight = (int) (58 * SCALE), statusBarX = (int) (10 * SCALE), statusBarY = (int) (10 * SCALE);
     private static final int healthBarWidth = (int) (150 * SCALE), healthBarHeight = (int) (4 * SCALE), healthBarXStart = (int) (34 * SCALE), healthBarYStart = (int) (14 * SCALE);
     private static final int maxHealth = 100;
-    private static int currentHealth = 60, healthWidth = healthBarWidth;
+    private static int currentHealth = 50, healthWidth = healthBarWidth;
     //AttackBox
     private static Rectangle2D.Float attackBox;
+    private boolean attackChecked = false;
+    private Playing playing;
 
-    public Player(float x, float y, int width, int height) {
+    public Player(float x, float y, int width, int height, Playing playing) {
         super(x, y, width, height);
+        this.playing = playing;
         loadAnimations();
         initHitBox(x, y, 20 * SCALE, 27 * SCALE);
         initAttackBox(x, y);
@@ -62,10 +66,24 @@ public class Player extends Entity{
 
     public void update() {
         updateHealthBar();
+        if (currentHealth <= 0) {
+            playing.setGameOver(true);
+            return;
+        }
         updateAttackBox();
         updatePosition();
+        if (attacking) {
+            checkAttack();
+        }
         updateAnimationTick();
         setAnimation();
+    }
+
+    private void checkAttack() {
+        if (!attackChecked || aniIndex == 1) {
+            attackChecked = true;
+            playing.checkEnemyHit(attackBox);
+        }
     }
 
     private void updateAttackBox() {
@@ -113,6 +131,7 @@ public class Player extends Entity{
             if (aniIndex >= GetSpriteAmount(playerAction)){
                 aniIndex = 0;
                 attacking = false;
+                attackChecked = false;
             }
         }
     }
@@ -235,7 +254,7 @@ public class Player extends Entity{
         this.jump = jump;
     }
 
-    public static void changeCurrentHealth(int value) {
+    public void changeCurrentHealth(int value) {
         currentHealth += value;
         if (currentHealth > maxHealth) {
             currentHealth = maxHealth;
@@ -250,5 +269,16 @@ public class Player extends Entity{
     public void resetDirBooleans() {
         left = false;
         right = false;
+    }
+
+    public void resetAll() {
+        resetDirBooleans();
+        attacking = false;
+        moving = false;
+        playerAction = IDL;
+        currentHealth = maxHealth;
+        hitbox.x = x;
+        hitbox.y = y;
+        inAir = !IsEntityOnFloor(hitbox, lvlData);
     }
 }

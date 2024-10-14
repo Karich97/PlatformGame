@@ -11,16 +11,17 @@ import static utilz.HelpMethods.*;
 public abstract class Enemy extends Entity {
     protected int aniIndex, enemyState, enemyType, aniTick, aniSpeed = 25;
     protected final float gravity = (float) (0.04 * SCALE), walkSpeed = 0.5f * SCALE;
-    protected boolean inAir = true;
-    protected float fallSpeed, xSpeed;
-    protected int walkDir = LEFT;
-    protected int tileY;
-    protected float attackDistance = TILES_SIZE;
+    protected boolean inAir = true, attackChecked = false;
+    protected boolean active = true;
+    protected float fallSpeed, xSpeed, attackDistance = TILES_SIZE;
+    protected int walkDir = LEFT, maxHealth, currentHealth, tileY;
 
     public Enemy(float x, float y, int width, int height, int enemyType) {
         super(x, y, width, height);
         this.enemyType = enemyType;
         initHitBox(x, y, width, height);
+        maxHealth = GetMaxHealth(enemyType);
+        currentHealth = maxHealth;
     }
 
     protected void turnTowardsPlayer(Player player){
@@ -94,8 +95,9 @@ public abstract class Enemy extends Entity {
             aniIndex++;
             if (aniIndex >= GetSpriteAmount(enemyType, enemyState)){
                 aniIndex = 0;
-                if (enemyState == ATTACK) {
-                    enemyState = IDLE;
+                switch (enemyState){
+                    case ATTACK, HIT -> enemyState = IDLE;
+                    case DEAD -> active = false;
                 }
             }
         }
@@ -119,5 +121,30 @@ public abstract class Enemy extends Entity {
 
     public int getEnemyState() {
         return enemyState;
+    }
+
+    protected void hurt(int amount){
+        currentHealth -= amount;
+        if (currentHealth <= 0) {
+            newState(DEAD);
+        } else {
+            newState(HIT);
+        }
+    }
+
+    protected void checkPlayerHit(Rectangle2D.Float attackBox, Player player) {
+        if (attackBox.intersects(player.hitbox)) {
+            player.changeCurrentHealth(-GetEnemyDmg(enemyType));
+        }
+        attackChecked = true;
+    }
+
+    public void resetEnemy() {
+        hitbox.x = x;
+        hitbox.y = y;
+        currentHealth = maxHealth;
+        newState(IDLE);
+        active = true;
+        inAir = true;
     }
 }

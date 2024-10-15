@@ -129,7 +129,7 @@ public class PauseOverlay {
             }
         } else if (isIn(e, replayB)) {
             if (replayB.isMousePressed()){
-                System.out.println("REPLAY");
+                playing.resetAll();
             }
         } else if (isIn(e, menuB)) {
             if (menuB.isMousePressed()){

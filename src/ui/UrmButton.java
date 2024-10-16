@@ -10,7 +10,8 @@ import static utilz.Constants.UI.UrmButtons.URM_SIZE;
 
 public class UrmButton extends PauseButton{
     private BufferedImage[] imgs;
-    private int rawIndex, index;
+    private final int rawIndex;
+    private int index;
     private boolean mouseOver, mousePressed;
 
     public UrmButton(int x, int y, int width, int height, int rawIndex) {
@@ -27,7 +28,7 @@ public class UrmButton extends PauseButton{
         }
     }
 
-    public void update(){
+    public void update() {
         index = 0;
         if (mouseOver){
             index = 1;

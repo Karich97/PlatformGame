@@ -6,6 +6,7 @@ import input.StateMethods;
 import level.LevelManager;
 import main.Game;
 import ui.GameOverOverlay;
+import ui.LevelCompletedOverlay;
 import ui.PauseOverlay;
 import utilz.LoadSave;
 
@@ -28,7 +29,8 @@ public class Playing extends State implements StateMethods {
     private EnemyManager enemyManager;
     private PauseOverlay pauseOverlay;
     private GameOverOverlay gameOverOverlay;
-    private boolean paused = false, gameOver = false;
+    private LevelCompletedOverlay levelCompletedOverlay;
+    private boolean paused = false, gameOver = false, levelCompleted = false;
     private int difX;
 
     public Playing(Game game) {
@@ -51,6 +53,7 @@ public class Playing extends State implements StateMethods {
         player.loadLvlData(levelManager.getLvlOne().getLvlData());
         pauseOverlay = new PauseOverlay(this);
         gameOverOverlay = new GameOverOverlay(this);
+        levelCompletedOverlay = new LevelCompletedOverlay(this);
     }
 
     public Player getPlayer() {
@@ -61,6 +64,8 @@ public class Playing extends State implements StateMethods {
     public void update() {
         if (paused) {
             pauseOverlay.update();
+        } else if (levelCompleted){
+            levelCompletedOverlay.update();
         } else if (!gameOver) {
             levelManager.update();
             player.update();
@@ -94,6 +99,8 @@ public class Playing extends State implements StateMethods {
             pauseOverlay.draw(g);
         } else if (gameOver) {
             gameOverOverlay.draw(g);
+        } else if (levelCompleted) {
+            levelCompletedOverlay.draw(g);
         }
     }
 
@@ -122,6 +129,8 @@ public class Playing extends State implements StateMethods {
     public void mousePressed(MouseEvent e) {
         if (paused){
             pauseOverlay.mousePressed(e);
+        } else if (levelCompleted) {
+            levelCompletedOverlay.mousePressed(e);
         }
     }
 
@@ -129,6 +138,8 @@ public class Playing extends State implements StateMethods {
     public void mouseReleased(MouseEvent e) {
         if (paused){
             pauseOverlay.mouseReleased(e);
+        } else if (levelCompleted) {
+            levelCompletedOverlay.mouseReleased(e);
         }
     }
 
@@ -136,6 +147,8 @@ public class Playing extends State implements StateMethods {
     public void mouseMoved(MouseEvent e) {
         if (paused){
             pauseOverlay.mouseMoved(e);
+        } else if (levelCompleted) {
+            levelCompletedOverlay.mouseMoved(e);
         }
     }
 

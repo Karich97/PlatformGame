@@ -89,9 +89,6 @@ public class PauseOverlay {
         volumeButton.draw(g);
     }
 
-    public void mouseClicked(MouseEvent e) {
-    }
-
     public void mouseDragged(MouseEvent e) {
         if (volumeButton.isMousePressed()){
             volumeButton.changeX(e.getX());

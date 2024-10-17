@@ -28,7 +28,7 @@ public class Player extends Entity{
     private static final int statusBarWidth = (int) (192 * SCALE), statusBarHeight = (int) (58 * SCALE), statusBarX = (int) (10 * SCALE), statusBarY = (int) (10 * SCALE);
     private static final int healthBarWidth = (int) (150 * SCALE), healthBarHeight = (int) (4 * SCALE), healthBarXStart = (int) (34 * SCALE), healthBarYStart = (int) (14 * SCALE);
     private static final int maxHealth = 100;
-    private static int currentHealth = 50, healthWidth = healthBarWidth;
+    private static int currentHealth = maxHealth, healthWidth = healthBarWidth;
     //AttackBox
     private static Rectangle2D.Float attackBox;
     private boolean attackChecked = false;
@@ -40,6 +40,13 @@ public class Player extends Entity{
         loadAnimations();
         initHitBox(x, y, 20 * SCALE, 27 * SCALE);
         initAttackBox(x, y);
+    }
+
+    public void setSpawn(Point spawn) {
+        this.x = spawn.x;
+        this.y = spawn.y;
+        hitbox.x = x;
+        hitbox.y = y;
     }
 
     private void initAttackBox(float x, float y) {

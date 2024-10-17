@@ -1,5 +1,6 @@
 package entity;
 
+import level.Level;
 import states.Playing;
 import utilz.LoadSave;
 
@@ -9,7 +10,6 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import static utilz.Constants.EnemyConstants.*;
-import static utilz.LoadSave.getCrabs;
 
 public class EnemyManager {
     private Playing playing;
@@ -19,12 +19,10 @@ public class EnemyManager {
     public EnemyManager(Playing playing) {
         this.playing = playing;
         loadEnemyImgs();
-        addEnemies();
     }
 
-    private void addEnemies() {
-        crabbies = getCrabs();
-        System.out.println("Amount off crabs = " + crabbies.size());
+    public void loadEnemies(Level level) {
+        crabbies = level.getCrabs();
     }
 
     private void loadEnemyImgs(){
@@ -39,10 +37,15 @@ public class EnemyManager {
     }
 
     public void update(int[][] lvlData, Player player) {
+        boolean isAnyActive = false;
         for (Crabby c : crabbies){
             if (c.active) {
                 c.update(lvlData, player);
+                isAnyActive = true;
             }
+        }
+        if (!isAnyActive) {
+            playing.setLevelCompleted(true);
         }
     }
 

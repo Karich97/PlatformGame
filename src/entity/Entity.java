@@ -3,10 +3,19 @@ package entity;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
+import static main.Game.SCALE;
+
 public abstract class Entity {
     protected float x, y;
-    protected int width = 0, height = 0, flipX = 0, flipW = 1;
-    protected Rectangle2D.Float hitbox;
+    protected float jumpSpeed = -2.25f * SCALE, airSpeed = 0f;
+    protected float walkSpeed, fallSpeedAfterCollision = 0.5f * SCALE;
+    protected boolean inAir = true, debug = false;
+    protected int width, height, flipX = 0, flipW = 1;
+    protected Rectangle2D.Float hitBox;
+    protected Rectangle2D.Float attackBox;
+    protected int maxHealth, currentHealth;
+    protected int aniTick = 0, aniIndex = 0;
+    protected int state;
 
     public Entity(float x, float y, int width, int height) {
         this.x = x;
@@ -15,17 +24,31 @@ public abstract class Entity {
         this.height = height;
     }
 
+    protected void initHitBox(float width, float height) {
+        hitBox = new Rectangle2D.Float(x, y, width * SCALE, height * SCALE);
+    }
+
+    public Rectangle2D.Float getHitBox() {
+        return hitBox;
+    }
+
+    protected int getState() {
+        return state;
+    }
+
+    protected int getAniIndex() {
+        return aniIndex;
+    }
+
+
     // For debugging
     protected void drawHitBox(Graphics g, int difX){
         g.setColor(Color.pink);
-        g.drawRect((int) hitbox.x - difX,(int) hitbox.y,(int) hitbox.width,(int) hitbox.height);
+        g.drawRect((int) hitBox.x - difX,(int) hitBox.y,(int) hitBox.width,(int) hitBox.height);
     }
 
-    protected void initHitBox(float x, float y, float width, float height) {
-        hitbox = new Rectangle2D.Float(x, y, width, height);
-    }
-
-    public Rectangle2D.Float getHitbox() {
-        return hitbox;
+    protected void drawAttackBox(Graphics g, int lvlOffset) {
+        g.setColor(Color.BLUE);
+        g.drawRect((int) attackBox.x - lvlOffset, (int) attackBox.y, (int) attackBox.width, (int) attackBox.height);
     }
 }

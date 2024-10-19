@@ -3,6 +3,10 @@ package utilz;
 import static main.Game.SCALE;
 
 public class Constants {
+
+    public static final float GRAVITY = (float) (0.04 * SCALE);
+    public static final int ANI_SPEED = 25;
+
     public static class EnemyConstants {
         public static final int CRABBY = 0;
 

@@ -93,7 +93,7 @@ public class Playing extends State implements StateMethods {
 
     private void checkCloseBorder() {
         int maxX = (levelManager.getCurrentLvl().getLvlData()[0].length - TILES_IN_WIDTH) * TILES_SIZE;
-        int playerX = (int) player.getHitbox().x;
+        int playerX = (int) player.getHitBox().x;
         difX = playerX - maxLvlOffsetX;
         if (difX < 0) {
             difX = 0;

@@ -3,7 +3,6 @@ package entity;
 import level.Level;
 import states.Playing;
 import utilz.LoadSave;
-
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -12,7 +11,7 @@ import java.util.ArrayList;
 import static utilz.Constants.EnemyConstants.*;
 
 public class EnemyManager {
-    private Playing playing;
+    private final Playing playing;
     private BufferedImage[][] crabbyArr;
     private ArrayList<Crabby> crabbies = new ArrayList<>();
 
@@ -53,15 +52,17 @@ public class EnemyManager {
         drawCrabs(g, difX);
     }
 
-    private void drawCrabs(Graphics g, int difX) {
+    private void drawCrabs(Graphics g, int lvlOffset) {
         for (Crabby c : crabbies) {
             if (c.active) {
-                g.drawImage(crabbyArr[c.getEnemyState()][c.getAniIndex()],
-                        (int)(c.hitbox.x) - difX - CRABBY_DRAW_OFFSET_X + c.flipX,
-                        (int)(c.hitbox.y) - CRABBY_DRAW_OFFSET_Y,
+                g.drawImage(crabbyArr[c.getState()][c.getAniIndex()],
+                        (int)(c.hitBox.x) - lvlOffset - CRABBY_DRAW_OFFSET_X + c.flipX,
+                        (int)(c.hitBox.y) - CRABBY_DRAW_OFFSET_Y,
                         CRABBY_WIDTH * c.flipW, CRABBY_HEIGHT, null);
-                //g.drawRect((int) c.hitbox.x - difX, (int) c.hitbox.y, (int) c.hitbox.width, (int) c.hitbox.height); //Crabby hitBox
-                //g.drawRect((int) c.attackBox.x - difX, (int) c.attackBox.y, (int) c.attackBox.width, (int) c.attackBox.height);  //Crabby attackBox
+                if (c.debug){
+                    c.drawAttackBox(g, lvlOffset);
+                    c.drawHitBox(g, lvlOffset);
+                }
             }
         }
     }
@@ -69,8 +70,8 @@ public class EnemyManager {
     public void checkEnemyHit(Rectangle2D.Float attackBox) {
         for (Crabby c: crabbies) {
             if (c.active) {
-                if (attackBox.intersects(c.hitbox)) {
-                    c.hurt(10);
+                if (attackBox.intersects(c.hitBox)) {
+                    c.hurt();
                     return;
                 }
             }

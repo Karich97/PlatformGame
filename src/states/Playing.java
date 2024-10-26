@@ -5,6 +5,7 @@ import entity.Player;
 import input.StateMethods;
 import level.LevelManager;
 import main.Game;
+import object.ObjectManager;
 import ui.GameOverOverlay;
 import ui.LevelCompletedOverlay;
 import ui.PauseOverlay;
@@ -26,6 +27,7 @@ public class Playing extends State implements StateMethods {
     private Player player;
     private LevelManager levelManager;
     private EnemyManager enemyManager;
+    private ObjectManager objectManager;
     private PauseOverlay pauseOverlay;
     private GameOverOverlay gameOverOverlay;
     private LevelCompletedOverlay levelCompletedOverlay;
@@ -56,6 +58,7 @@ public class Playing extends State implements StateMethods {
 
     private void loadStartLvl() {
         enemyManager.loadEnemies(levelManager.getCurrentLvl());
+        objectManager.loadObjects(levelManager.getCurrentLvl());
     }
 
     private void calculatingLvlOffset() {
@@ -65,6 +68,7 @@ public class Playing extends State implements StateMethods {
     private void initClasses() {
         levelManager = new LevelManager(game);
         enemyManager = new EnemyManager(this);
+        objectManager = new ObjectManager(this);
         player = new Player((int) (GAME_WIDTH * 0.2), (int) (GAME_HEIGHT * 0.3), (int) (64 * SCALE), (int) (40 * SCALE), this);
         player.loadLvlData(levelManager.getCurrentLvl().getLvlData());
         player.setSpawn(levelManager.getCurrentLvl().getPlayerSpawn());
@@ -85,6 +89,7 @@ public class Playing extends State implements StateMethods {
             levelCompletedOverlay.update();
         } else if (!gameOver) {
             levelManager.update();
+            objectManager.update();
             player.update();
             checkCloseBorder();
             enemyManager.update(levelManager.getCurrentLvl().getLvlData(), player);
@@ -108,6 +113,7 @@ public class Playing extends State implements StateMethods {
         drawClouds(g);
         drawSmallClouds(g);
         levelManager.draw(g, difX);
+        objectManager.draw(g, difX);
         player.render(g, difX);
         enemyManager.draw(g, difX);
         if (paused) {
@@ -237,6 +243,10 @@ public class Playing extends State implements StateMethods {
 
     public EnemyManager getEnemyManager() {
         return enemyManager;
+    }
+
+    public ObjectManager getObjectManager() {
+        return objectManager;
     }
 
     public void setMaxLvlOffsetX(int lvlOffsetX) {

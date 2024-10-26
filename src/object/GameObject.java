@@ -7,7 +7,7 @@ import static main.Game.SCALE;
 import static utilz.Constants.ANI_SPEED;
 import static utilz.Constants.ObjectConstants.*;
 
-public class GameObject {
+public abstract class GameObject {
     protected int x, y, objectType;
     protected Rectangle2D.Float hitBox;
     protected boolean doAnimation, active = true;

@@ -231,10 +231,19 @@ public class Playing extends State implements StateMethods {
         levelCompleted = false;
         player.resetAll();
         enemyManager.resetAll();
+        objectManager.resetAll();
     }
 
     public void checkEnemyHit(Rectangle2D.Float attackBox) {
         enemyManager.checkEnemyHit(attackBox);
+    }
+
+    public void checkObjectHit(Rectangle2D.Float attackBox) {
+        objectManager.checkObjectHit(attackBox);
+    }
+
+    public void checkPotionTouched(Rectangle2D.Float hitBox) {
+        objectManager.checkObjectTouched(hitBox);
     }
 
     public void setGameOver(boolean gameOver) {

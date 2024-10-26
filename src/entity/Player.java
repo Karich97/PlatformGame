@@ -78,6 +78,9 @@ public class Player extends Entity{
         }
         updateAttackBox();
         updatePosition();
+        if (moving) {
+            checkPotionTouched();
+        }
         if (attacking) {
             checkAttack();
         }
@@ -85,10 +88,15 @@ public class Player extends Entity{
         setAnimation();
     }
 
+    private void checkPotionTouched() {
+        playing.checkPotionTouched(hitBox);
+    }
+
     private void checkAttack() {
-        if (!attackChecked || aniIndex == 1) {
+        if (!attackChecked && aniIndex == 1) {
             attackChecked = true;
             playing.checkEnemyHit(attackBox);
+            playing.checkObjectHit(attackBox);
         }
     }
 
@@ -281,5 +289,9 @@ public class Player extends Entity{
         hitBox.x = x;
         hitBox.y = y;
         inAir = !IsEntityOnFloor(hitBox, lvlData);
+    }
+
+    public void changePower(int bluePotionValue) {
+        System.out.println("ADDED Power for " + bluePotionValue + " points");
     }
 }

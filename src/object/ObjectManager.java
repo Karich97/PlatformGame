@@ -5,9 +5,11 @@ import states.Playing;
 import utilz.LoadSave;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import static main.Game.TILES_SIZE;
 import static utilz.Constants.ObjectConstants.*;
 
 public class ObjectManager {
@@ -19,6 +21,39 @@ public class ObjectManager {
     public ObjectManager(Playing playing) {
         this.playing = playing;
         loadImages();
+    }
+
+    public void checkObjectTouched(Rectangle2D.Float hitBox){
+        for (Potion p : potions){
+            if (p.active && hitBox.intersects(p.hitBox)){
+                applyEffectToPlayer(p);
+                p.setActive(false);
+            }
+        }
+    }
+
+    public void applyEffectToPlayer(Potion p){
+        if (p.active && p.getObjectType() == RED_POTION){
+            System.out.println("APPLIED!!!");
+            playing.getPlayer().changeCurrentHealth(RED_POTION_VALUE);
+        } else playing.getPlayer().changePower(BLUE_POTION_VALUE);
+    }
+
+    public void checkObjectHit(Rectangle2D.Float attackBox){
+        for (GameContainer gc : containers) {
+            if (gc.active && gc.hitBox.intersects(attackBox)){
+                gc.setDoAnimation(true);
+                int type = 0;
+                if (gc.getObjectType() == BARREL) {
+                    type = 1;
+                }
+                potions.add(new Potion(
+                        (int) (gc.getHitBox().x + gc.getHitBox().width / 2),
+                        (int) (gc.getHitBox().y - (float) TILES_SIZE / 3),
+                        type));
+                return;
+            }
+        }
     }
 
     public void loadObjects(Level newLevel){
@@ -90,6 +125,15 @@ public class ObjectManager {
                         POTION_HEIGHT,
                         null);
             }
+        }
+    }
+
+    public void resetAll() {
+        for (Potion p: potions){
+            p.reset();
+        }
+        for (GameContainer gc: containers){
+            gc.reset();
         }
     }
 }

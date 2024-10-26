@@ -62,6 +62,10 @@ public abstract class GameObject {
         this.active = active;
     }
 
+    public void setDoAnimation(boolean doAnimation) {
+        this.doAnimation = doAnimation;
+    }
+
     public int getObjectType() {
         return objectType;
     }

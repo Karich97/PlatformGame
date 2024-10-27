@@ -183,4 +183,20 @@ public class HelpMethods {
         }
         return new Point(2 * TILES_SIZE, 2 * TILES_SIZE);
     }
+
+    public static ArrayList<Spike> GetSpikes(BufferedImage img) {
+        ArrayList<Spike> list = new ArrayList<>();
+        Color color;
+        int type;
+        for (int j = 0; j < img.getHeight(); j++) {
+            for (int i = 0; i < img.getWidth(); i++) {
+                color = new Color(img.getRGB(i, j));
+                type = color.getBlue();
+                if (type == SPIKE){
+                    list.add(new Spike(i * TILES_SIZE, j * TILES_SIZE, type));
+                }
+            }
+        }
+        return list;
+    }
 }

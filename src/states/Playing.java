@@ -246,6 +246,10 @@ public class Playing extends State implements StateMethods {
         objectManager.checkObjectTouched(hitBox);
     }
 
+    public void checkSpikesTouched(Player player) {
+        objectManager.checkSpikesTouched(player);
+    }
+
     public void setGameOver(boolean gameOver) {
         this.gameOver = gameOver;
     }
@@ -264,5 +268,9 @@ public class Playing extends State implements StateMethods {
 
     public void setLevelCompleted(boolean b) {
         this.levelCompleted = b;
+    }
+
+    public LevelManager getLevelManager() {
+        return levelManager;
     }
 }

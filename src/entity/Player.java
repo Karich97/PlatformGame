@@ -80,12 +80,17 @@ public class Player extends Entity{
         updatePosition();
         if (moving) {
             checkPotionTouched();
+            checkSpikesTouched();
         }
         if (attacking) {
             checkAttack();
         }
         updateAnimationTick();
         setAnimation();
+    }
+
+    private void checkSpikesTouched() {
+        playing.checkSpikesTouched(this);
     }
 
     private void checkPotionTouched() {

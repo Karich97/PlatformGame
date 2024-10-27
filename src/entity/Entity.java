@@ -40,6 +40,9 @@ public abstract class Entity {
         return aniIndex;
     }
 
+    public int getMaxHealth() {
+        return maxHealth;
+    }
 
     // For debugging
     protected void drawHitBox(Graphics g, int difX){
